@@ -85,7 +85,7 @@ public class GameController : MonoBehaviour
         }
         else
         {
-            gameSpeed += driveAcceleration * Time.deltaTime * Time.deltaTime;
+            gameSpeed += driveAcceleration * Time.fixedDeltaTime * Time.fixedDeltaTime;
         }
 
         gameSpeed = Mathf.Clamp(gameSpeed, 0, maxGameSpeed);
@@ -107,7 +107,7 @@ public class GameController : MonoBehaviour
             GameObject can = cans[i];
             if (can.transform.position.x > -9.5f)
             {
-                can.transform.position -= Vector3.right * gameSpeed * Time.deltaTime;
+                can.transform.position -= Vector3.right * gameSpeed * Time.fixedDeltaTime;
             }
             else if (can.CompareTag("Full"))
             {
@@ -129,7 +129,7 @@ public class GameController : MonoBehaviour
         }
         else if (canSpawnTime > 0f)
         {
-            canSpawnTime -= Time.deltaTime * (gameSpeed / maxGameSpeed);
+            canSpawnTime -= Time.fixedDeltaTime * (gameSpeed / maxGameSpeed);
         }
     }
 
@@ -270,6 +270,15 @@ public class GameController : MonoBehaviour
         }
 
         AttemptLift();
+        UpdateScore();
+        if (gameTime > 0f)
+        {
+            UpdateGameTimer();
+        }
+    }
+
+    private void FixedUpdate()
+    {
         if (!doLift)
         {
             UpdateGameSpeed();
@@ -277,10 +286,5 @@ public class GameController : MonoBehaviour
         HandleCans();
         RotateWheels();
         UpdateEngineSound();
-        UpdateScore();
-        if (gameTime > 0f)
-        {
-            UpdateGameTimer();
-        }
     }
 }
